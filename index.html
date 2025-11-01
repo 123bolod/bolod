@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>দাউদ স্টোর — Daud Store</title>
+  <meta name="description" content="দাউদ স্টোর - single-file responsive e-commerce (admin upload, feedback with product image, pagination).">
+  <style>
+    :root{
+      --bg:#f8fafc; --card:#fff; --muted:#6b7280;
+      --accent:#ff7a00; --accent-2:#ff9a33; --shadow:0 10px 30px rgba(2,6,23,0.06);
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,Arial;color:#0f172a;background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+
+    /* Topbar */
+    .topbar{position:sticky;top:0;z-index:120;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 6px 20px rgba(0,0,0,0.08)}
+    .brand-left{display:flex;align-items:center;gap:12px}
+    #siteLogo{width:52px;height:52px;border-radius:10px;background:#fff;padding:6px;object-fit:contain;box-shadow:var(--shadow)}
+    .brand-title{font-weight:800;font-size:1.05rem}
+    .brand-sub{font-size:12px;opacity:.95}
+
+    .nav{display:flex;gap:12px;align-items:center}
+    .nav a{font-weight:700;color:rgba(255,255,255,0.95);padding:8px 10px;border-radius:8px}
+    .nav a:hover{background:rgba(255,255,255,0.06)}
+
+    .top-actions{display:flex;gap:8px;align-items:center}
+    .btn{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;box-shadow:0 12px 28px rgba(2,6,23,0.06);transition:transform .18s,box-shadow .18s;background:#fff;color:var(--accent)}
+    .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.12)}
+    .btn.primary{background:var(--accent);color:#fff}
+    .btn.small{padding:6px 8px;font-size:.9rem}
+    .btn:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 20px 40px rgba(0,0,0,0.12)}
+
+    main{padding:16px;max-width:1200px;margin:0 auto}
+
+    /* Hero */
+    .hero{display:flex;flex-direction:column;gap:12px}
+    .hero-top{display:flex;align-items:center;gap:12px;justify-content:space-between}
+    .logo-box{display:flex;align-items:center;gap:12px}
+    .hero-center{flex:1;text-align:center}
+    .rotating-text{font-size:1.1rem;font-weight:800;color:var(--accent);min-height:48px;display:flex;align-items:center;justify-content:center}
+
+    /* top three */
+    .top-three{display:flex;gap:10px;justify-content:center;flex-wrap:nowrap;overflow:hidden}
+    .small-card{flex:0 0 28%;min-width:90px;height:110px;background:var(--card);border-radius:12px;display:flex;align-items:center;justify-content:center;padding:8px;box-shadow:var(--shadow);cursor:pointer}
+    .small-card img{max-width:100%;max-height:100%;object-fit:contain}
+
+    /* slider */
+    .slider{width:100%;height:220px;background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center}
+    .slides{display:flex;height:100%;transition:transform .6s ease}
+    .slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:12px}
+    .slide img{max-height:180px;max-width:90%;object-fit:contain;border-radius:10px}
+    .dots{display:flex;gap:8px;justify-content:center;margin-top:8px}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(0,0,0,0.12);cursor:pointer}
+    .dot.active{background:var(--accent)}
+
+    /* products grid */
+    .section{margin-top:18px}
+    .section h2{margin:0 0 6px 0}
+    .products-grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}
+    .product-card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;align-items:center}
+    .product-card img{width:100%;height:160px;object-fit:contain;border-radius:8px}
+    .product-meta{width:100%;text-align:center}
+    .product-meta h4{margin:6px 0 4px 0;font-size:1rem}
+    .product-meta p{margin:0;color:var(--muted);font-size:.95rem}
+    .card-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+
+    .pill{padding:6px 10px;border-radius:999px;border:none;background:#fff;color:var(--accent);box-shadow:0 8px 18px rgba(0,0,0,0.06);font-weight:700}
+    .pill{transition: transform .18s, box-shadow .18s;}
+    .pill:hover{transform: translateY(-4px) scale(1.05);box-shadow: 0 16px 32px rgba(0,0,0,0.12);}
+    .pill:active{transform: translateY(0) scale(1);box-shadow: 0 8px 18px rgba(0,0,0,0.06);}
+
+    /* pagination */
+    .pagination{display:flex;gap:8px;justify-content:center;margin-top:12px}
+    .page-btn{padding:8px 12px;border-radius:10px;border:1px solid #eee;background:var(--card);cursor:pointer}
+    .page-btn.active{background:var(--accent);color:#fff;border:none}
+
+    .center-card{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow);margin:16px 0}
+
+    .cart-item{display:flex;gap:12px;align-items:center;justify-content:space-between;border-radius:10px;padding:10px;background:#fff}
+    .cart-item img{height:72px;width:72px;object-fit:contain;border-radius:8px}
+
+    .feedback-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .fb-item{background:#fff;padding:10px;border-radius:10px;box-shadow:var(--shadow)}
+
+    /* admin panel */
+    .admin-panel{position:fixed;right:-520px;top:80px;width:520px;background:var(--card);border-radius:12px;padding:14px;box-shadow:0 30px 60px rgba(2,6,23,0.12);transition:right .35s;z-index:220;max-height:82vh;overflow:auto}
+    .admin-panel.active{right:16px}
+    .admin-row{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .admin-row input, .admin-row textarea, .admin-row select{padding:10px;border-radius:8px;border:1px solid #eee}
+
+    .modal{display:none;position:fixed;inset:0;background:rgba(2,6,23,0.45);align-items:center;justify-content:center;z-index:300;padding:18px}
+    .modal.show{display:flex}
+    .modal-card{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow);max-width:720px;width:100%;position:relative}
+    .modal-close{position:absolute;right:8px;top:8px;border:none;background:transparent;font-size:18px;cursor:pointer}
+
+    @media (max-width:1000px){
+      .products-grid{grid-template-columns:repeat(2,1fr)}
+      .small-card{flex:0 0 32%}
+    }
+    @media (max-width:640px){
+      .nav{display:none}
+      .top-three{gap:8px;overflow:auto;padding:6px}
+      .small-card{flex:0 0 30%}
+      .slider{height:180px}
+      .product-card img{width:100%;height:auto;max-height:140px;}
+      .products-grid{grid-template-columns:repeat(1,1fr)}
+      .hero-top{flex-direction:column;align-items:center;gap:8px}
+      main{padding:12px}
+      .admin-panel{width:94%}
+      .topbar{flex-wrap:wrap;gap:8px}
+      .top-actions{flex-wrap:wrap;width:100%;justify-content:center}
+      .top-actions .btn{flex:1 1 calc(50% - 12px);margin-top:6px;}
+    }
+
+    .muted{color:var(--muted)}
+    .hidden{display:none}
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .admin-only{display:none}
+  </style>
+</head>
+<body>
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="brand-left">
+      <img id="siteLogo" src="" alt="দাউদ স্টোর Logo">
+      <div>
+        <div class="brand-title">দাউদ স্টোর</div>
+        <div class="brand-sub">Quality • Trust • Fast</div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Main">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#products" class="nav-link">Products</a>
+      <a href="#cart" class="nav-link">Cart</a>
+      <a href="#contact" class="nav-link">Contact</a>
+      <a href="#feedback" class="nav-link">Feedback</a>
+    </nav>
+
+    <div class="top-actions">
+      <button id="guestBtn" class="btn ghost small">Guest</button>
+      <button id="userAuthBtn" class="btn small">Sign Up / Login</button>
+      <button id="adminOpenBtn" class="btn primary small">Admin</button>
+      <button id="shareBtn" class="btn small admin-only">Share</button>
+    </div>
+  </header>
+
+  <div id="adminAlert" class="hidden" style="background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;position:fixed;top:80px;right:16px;z-index:500;box-shadow:0 4px 12px rgba(0,0,0,0.1);"></div>
+
+  <main>
+    <!-- HOME -->
+    <section id="home" class="page active">
+      <div class="hero">
+        <div class="hero-top">
+          <div class="logo-box"><img id="heroLogo" src="" alt="logo" style="width:64px;height:64px;border-radius:10px;object-fit:contain"></div>
+          <div class="hero-center"><div id="rotatingText" class="rotating-text">স্বাগতম — দাউদ স্টোর</div></div>
+          <div style="width:64px"></div>
+        </div>
+
+        <div class="top-three" id="topThree"></div>
+
+        <div class="slider" id="sliderWrap">
+          <div class="slides" id="slides"></div>
+        </div>
+        <div class="dots" id="slideDots"></div>
+      </div>
+
+      <section class="section">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2>Trending Products</h2>
+          <div id="productsCount" class="muted"></div>
+        </div>
+        <div id="productsGrid" class="products-grid"></div>
+        <div id="pagination" class="pagination"></div>
+      </section>
+    </section>
+
+    <!-- product view -->
+    <section id="product-view" class="page">
+      <div class="center-card" id="productViewCard"></div>
+    </section>
+
+    <!-- products page -->
+    <section id="products" class="page">
+      <div class="center-card">
+        <h2>All Products</h2>
+        <input id="productSearchInput" placeholder="পণ্য সার্চ করুন..." style="width:100%;padding:10px;border-radius:8px;border:1px solid #eee;margin-top:6px;margin-bottom:8px" />
+        <div id="productsGridFull" class="products-grid"></div>
+        <div id="paginationFull" class="pagination"></div>
+      </div>
+    </section>
+
+    <!-- cart -->
+    <section id="cart" class="page">
+      <div class="center-card">
+        <h2>Your Cart</h2>
+        <div id="cartItems" class="card-list"></div>
+        <div style="text-align:center;margin-top:12px">
+          <button id="checkoutBtn" class="btn primary">Checkout (Demo)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- contact -->
+    <section id="contact" class="page">
+      <div class="center-card">
+        <h2>Contact</h2>
+        <p class="muted">Contact via WhatsApp or Messenger (set by admin).</p>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
+          <button id="contactWhatsapp" class="btn" style="background:#25D366;color:#fff">WhatsApp</button>
+          <button id="contactMessenger" class="btn" style="background:#0084FF;color:#fff">Messenger</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- feedback -->
+    <section id="feedback" class="page">
+      <div class="center-card">
+        <h2>Feedback</h2>
+        <div style="margin-top:10px">
+          <h3>Website feedback</h3>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+            <button id="siteGoodBtn" class="btn">👍 Good (<span id="goodCount">0</span>)</button>
+            <button id="siteBadBtn" class="btn">👎 Bad (<span id="badCount">0</span>)</button>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <h3>Product feedback</h3>
+          <label>Search product</label>
+          <input id="feedbackSearch" placeholder="Type product name..." style="width:100%;padding:10px;border-radius:8px;border:1px solid #eee;margin-top:6px" />
+          <div id="feedbackSearchResults" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"></div>
+
+          <div id="selectedFeedbackProduct" style="display:none;margin-top:12px">
+            <div style="display:flex;gap:10px;align-items:center">
+              <img id="feedbackSelectedImg" src="" alt="" style="height:92px;border-radius:8px;box-shadow:var(--shadow)">
+              <div>
+                <strong id="feedbackSelectedName"></strong><br>
+                <span id="feedbackSelectedPrice" class="muted"></span>
+              </div>
+            </div>
+
+            <textarea id="feedbackText" placeholder="Write your feedback..." rows="4" style="width:100%;margin-top:10px;padding:10px;border-radius:8px;border:1px solid #eee"></textarea>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
+              <button id="submitFeedbackBtn" class="btn primary">Submit Feedback</button>
+              <button id="viewFeedbacksBtn" class="btn">View All</button>
+            </div>
+          </div>
+
+          <div id="feedbackList" class="feedback-list" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- admin panel -->
+  <aside id="adminPanel" class="admin-panel" aria-hidden="true">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3>Admin Panel</h3>
+      <div><button id="closeAdmin" class="btn small">✕</button></div>
+    </div>
+
+    <div class="admin-row">
+      <label><strong>Admin (Create/Login)</strong></label>
+      <input id="adminEmail" type="email" placeholder="your@email.com" />
+      <input id="adminPass" type="password" placeholder="password" />
+      <div style="display:flex;gap:8px">
+        <button id="adminLoginBtn" class="btn primary">Login / Create</button>
+        <button id="adminLogoutBtn" class="btn">Logout</button>
+      </div>
+      <small class="muted">Owner email only can login. First time owner sets password automatically.</small>
+    </div>
+
+    <hr/>
+
+    <div class="admin-row admin-only">
+      <label><strong>Upload Logo</strong></label>
+      <input id="logoInput" type="file" accept="image/*" />
+      <button id="logoSetBtn" class="btn">Upload Logo</button>
+    </div>
+
+    <div class="admin-row admin-only" style="margin-top:10px">
+      <label><strong>Upload Product</strong></label>
+      <input id="productImageInput" type="file" accept="image/*" />
+      <input id="productName" type="text" placeholder="Product name" />
+      <input id="productPrice" type="text" placeholder="Price" />
+      <input id="productDesc" type="text" placeholder="Short description" />
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="addProductBtn" class="btn primary">Add Product</button>
+        <button id="clearProductsBtn" class="btn">Clear All</button>
+      </div>
+    </div>
+
+    <div class="admin-row admin-only" style="margin-top:10px">
+      <label><strong>Animated sentences (comma separated)</strong></label>
+      <textarea id="sentencesInput" placeholder="Welcome!, Best deals!, Fast delivery" rows="3"></textarea>
+      <button id="saveSentencesBtn" class="btn primary">Save Sentences</button>
+    </div>
+
+    <div class="admin-row admin-only" style="margin-top:10px">
+      <label><strong>Currency Symbol (shown on product cards)</strong></label>
+      <input id="currencyInput" type="text" placeholder="৳ or $" />
+      <button id="setCurrencyBtn" class="btn">Set Currency</button>
+    </div>
+
+    <div class="admin-row admin-only" style="margin-top:10px">
+      <label><strong>WhatsApp (country + number)</strong></label>
+      <div style="display:flex;gap:8px">
+        <select id="whatsappCountry"><option value="+880" selected>+880 (BD)</option><option value="+91">+91 (IN)</option><option value="+1">+1 (US)</option><option value="+44">+44 (UK)</option><option value="+971">+971 (UAE)</option></select>
+        <input id="whatsappNumber" placeholder="1XXXXXXXXX" />
+      </div>
+      <label style="margin-top:8px"><strong>Messenger link</strong></label>
+      <input id="messengerInput" placeholder="https://m.me/username" />
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="saveContactsBtn" class="btn primary">Save Contacts</button>
+        <button id="openContactsBtn" class="btn">Test Contact</button>
+      </div>
+    </div>
+
+    <div class="admin-row admin-only" style="margin-top:10px">
+      <label><strong>Share (Admin)</strong></label>
+      <button id="openShare" class="btn">Open Share Modal</button>
+    </div>
+
+    <div class="admin-row admin-only" style="margin-top:10px">
+      <label><strong>Public Link (GitHub Pages)</strong></label>
+      <input id="publicLinkInput" type="text" placeholder="https://username.github.io/your-site" />
+      <button id="savePublicLinkBtn" class="btn">Save Public Link</button>
+    </div>
+
+    <div class="admin-row admin-only" style="margin-top:10px">
+      <label><strong>Owner Admin Email / Password</strong></label>
+      <input id="ownerEmailInput" type="email" placeholder="owner@email.com" />
+      <input id="ownerPassInput" type="password" placeholder="new password (optional)" />
+      <button id="saveOwnerBtn" class="btn">Save Owner Settings</button>
+      <small class="muted">Only current owner can change these.</small>
+    </div>
+  </aside>
+
+  <!-- share modal -->
+  <div id="shareModal" class="modal">
+    <div class="modal-card">
+      <button class="modal-close" data-close>✕</button>
+      <h3>Share দাউদ স্টোর</h3>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="shareWhatsapp" class="btn" style="background:#25D366;color:#fff">WhatsApp</button>
+        <button id="shareMessenger" class="btn" style="background:#0084FF;color:#fff">Messenger</button>
+        <button id="copyLinkBtn" class="btn">Copy Link</button>
+      </div>
+      <p class="muted" style="margin-top:8px">Note: Host on GitHub Pages/Netlify (not file://) for others to open.</p>
+    </div>
+  </div>
+
+  <!-- user modal -->
+  <div id="userModal" class="modal">
+    <div class="modal-card">
+      <button class="modal-close" data-close>✕</button>
+      <h3>Sign Up / Login</h3>
+      <input id="userEmail" type="email" placeholder="Email" />
+      <input id="userPass" type="password" placeholder="Password" />
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="userSignupBtn" class="btn primary">Sign Up</button>
+        <button id="userLoginBtn" class="btn">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- view feedback modal -->
+  <div id="viewFeedbackModal" class="modal">
+    <div class="modal-card">
+      <button class="modal-close" data-close>✕</button>
+      <h3>All Feedbacks</h3>
+      <div id="allFeedbacks"></div>
+    </div>
+  </div>
+
+  <script>
+  /*****************************************
+   দাউদ স্টোর — Single-file (fixed)
+  *****************************************/
+
+  // ---------- Helpers: site settings (LS) ----------
+  const LS_KEYS = {
+    SITE: 'daudSite',
+    PRODUCTS: 'daudProducts',
+    CART: 'daudCart',
+    FEEDBACKS: 'daudFeedbacks',
+    SITE_FEEDBACK: 'daudSiteFeedback',
+    ADMIN_LOGGED_IN: 'daudAdminLoggedIn',
+    ADMIN_EMAIL_FLAG: 'daudAdminEmailFlag',
+    USERS: 'daudUsers',
+    CURRENT_USER: 'daudCurrentUser',
+    LIKES: 'daudLikes',
+    LIKE_COUNTS: 'daudLikeCounts',
+    DISLIKE_COUNTS: 'daudDislikeCounts'
+  };
+  function getSiteSettings(){ try{return JSON.parse(localStorage.getItem(LS_KEYS.SITE)||'{}')}catch(_){return{}} }
+  function saveSiteSettings(s){ localStorage.setItem(LS_KEYS.SITE, JSON.stringify(s||{})); }
+
+  async function sha256(str){
+    const enc = new TextEncoder().encode(str);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  // ---------- DOM refs ----------
+  const pages = document.querySelectorAll('.page');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const siteLogo = document.getElementById('siteLogo');
+  const heroLogo = document.getElementById('heroLogo');
+  const rotatingText = document.getElementById('rotatingText');
+
+  const topThree = document.getElementById('topThree');
+  const slides = document.getElementById('slides');
+  const slideDots = document.getElementById('slideDots');
+
+  const productsGrid = document.getElementById('productsGrid');
+  const productsGridFull = document.getElementById('productsGridFull');
+  const pagination = document.getElementById('pagination');
+  const paginationFull = document.getElementById('paginationFull');
+  const productsCount = document.getElementById('productsCount');
+
+  const productViewCard = document.getElementById('productViewCard');
+  const cartItems = document.getElementById('cartItems');
+
+  const feedbackSearch = document.getElementById('feedbackSearch');
+  const feedbackSearchResults = document.getElementById('feedbackSearchResults');
+  const selectedFeedbackProduct = document.getElementById('selectedFeedbackProduct');
+  const feedbackSelectedImg = document.getElementById('feedbackSelectedImg');
+  const feedbackSelectedName = document.getElementById('feedbackSelectedName');
+  const feedbackSelectedPrice = document.getElementById('feedbackSelectedPrice');
+  const feedbackText = document.getElementById('feedbackText');
+  const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
+  const viewFeedbacksBtn = document.getElementById('viewFeedbacksBtn');
+  const allFeedbacks = document.getElementById('allFeedbacks');
+  const goodCount = document.getElementById('goodCount');
+  const badCount = document.getElementById('badCount');
+
+  const publicLinkInput = document.getElementById('publicLinkInput');
+  const savePublicLinkBtn = document.getElementById('savePublicLinkBtn');
+
+  const productSearchInput = document.getElementById('productSearchInput');
+  let filteredProducts = [];
+  let adminLoggedIn = false;
+  const feedbackList = document.getElementById('feedbackList');
+
+  const guestBtn = document.getElementById('guestBtn');
+  const userAuthBtn = document.getElementById('userAuthBtn');
+  const adminOpenBtn = document.getElementById('adminOpenBtn');
+  const shareBtn = document.getElementById('shareBtn');
+
+  const adminPanel = document.getElementById('adminPanel');
+  const closeAdmin = document.getElementById('closeAdmin');
+  const adminEmail = document.getElementById('adminEmail');
+  const adminPass = document.getElementById('adminPass');
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+
+  const logoInput = document.getElementById('logoInput');
+  const logoSetBtn = document.getElementById('logoSetBtn');
+
+  const productImageInput = document.getElementById('productImageInput');
+  const productName = document.getElementById('productName');
+  const productPrice = document.getElementById('productPrice');
+  const productDesc = document.getElementById('productDesc');
+  const addProductBtn = document.getElementById('addProductBtn');
+  const clearProductsBtn = document.getElementById('clearProductsBtn');
+
+  const sentencesInput = document.getElementById('sentencesInput');
+  const saveSentencesBtn = document.getElementById('saveSentencesBtn');
+  const currencyInput = document.getElementById('currencyInput');
+  const setCurrencyBtn = document.getElementById('setCurrencyBtn');
+  const whatsappCountry = document.getElementById('whatsappCountry');
+  const whatsappNumber = document.getElementById('whatsappNumber');
+  const messengerInput = document.getElementById('messengerInput');
+  const saveContactsBtn = document.getElementById('saveContactsBtn');
+  const openContactsBtn = document.getElementById('openContactsBtn');
+  const openShare = document.getElementById('openShare');
+
+  const ownerEmailInput = document.getElementById('ownerEmailInput');
+  const ownerPassInput = document.getElementById('ownerPassInput');
+  const saveOwnerBtn = document.getElementById('saveOwnerBtn');
+
+  const viewFeedbacksModal = document.getElementById('viewFeedbackModal');
+  const userModal = document.getElementById('userModal');
+  const shareModal = document.getElementById('shareModal');
+
+  // ---------- Defaults ----------
+  const DEFAULT_PRODUCTS = [
+    {
+      id: 1,
+      name: 'Sample Product',
+      price: '100',
+      desc: 'This is a sample product for demonstration.',
+      image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAA5klEQVR4nO3QQQkAIADAQLV/Z63gXiLcJRibe3BrvQ74iVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWcEBil4Bx/GEGnoAAAAASUVORK5CYII='
+    }
+  ];
+
+  let products = [];
+  const ITEMS_PER_PAGE = 6;
+  let currentPageHome = 1;
+  let currentPageFull = 1;
+
+  // ---------- Init ----------
+  if (document.readyState !== 'loading') { initApp(); } else { document.addEventListener('DOMContentLoaded', initApp); }
+
+  function initApp() {
+    setupNavigation();
+    loadSiteSettings();
+    loadProducts();
+    loadCart();
+    loadLikes();
+    loadLikeCounts();
+    setupFeedbackSystem();
+    autoRotateText();
+    initAdminPanel();
+
+    initUserSystem();
+    checkAdminPersistentLogin();
+
+    if (productSearchInput) productSearchInput.addEventListener('input', handleProductSearch);
+
+    if (shareBtn) shareBtn.addEventListener('click', e => {
+      e.preventDefault();
+      if (shareModal) shareModal.classList.add('show');
+    });
+  }
+
+  // ---------- Navigation ----------
+  function setupNavigation() {
+    function switchPage(target) {
+      pages.forEach(p => p.classList.remove('active'));
+      const el = document.getElementById(target);
+      if (el) el.classList.add('active');
+    }
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        const pageId = href ? href.replace('#', '') : '';
+        switchPage(pageId || 'home');
+      });
+    });
+    switchPage('home');
+  }
+
+  // ---------- Site Settings ----------
+  let rotatingSentences = ['স্বাগতম — দাউদ স্টোর', 'Best deals!', 'Fast delivery'];
+  let currencySymbol = '৳';
+  let whatsappLink = '';
+  let messengerLink = '';
+  let publicLink = '';
+
+  function loadSiteSettings() {
+    const saved = getSiteSettings();
+    if (!saved.ownerEmail) { saved.ownerEmail = 'mdipml000@gmail.com'; saveSiteSettings(saved); }
+
+    if (saved.logo) siteLogo.src = heroLogo.src = saved.logo;
+    if (saved.sentences) rotatingSentences = saved.sentences.split(',').map(s => s.trim()).filter(Boolean);
+    if (saved.currency) currencySymbol = saved.currency;
+    if (saved.whatsapp) whatsappLink = saved.whatsapp;
+    if (saved.messenger) messengerLink = saved.messenger;
+    if (saved.publicLink) { publicLink = saved.publicLink; if (publicLinkInput) publicLinkInput.value = publicLink; }
+    if (ownerEmailInput) ownerEmailInput.value = saved.ownerEmail || '';
+  }
+
+  // ---------- Products ----------
+  function loadProducts() {
+    products = DEFAULT_PRODUCTS.slice();
+    updateProductsUI();
+    try {
+      const local = JSON.parse(localStorage.getItem(LS_KEYS.PRODUCTS) || '[]');
+      if (Array.isArray(local) && local.length > 0) { products = local; updateProductsUI(); }
+    } catch(e){}
+    fetch('products.json?' + Date.now()).then(r=>r.ok?r.json():[]).then(remote=>{
+      if (Array.isArray(remote) && remote.length>0) { products = remote; updateProductsUI(); }
+    }).catch(()=>{});
+  }
+
+  function updateProductsUI() {
+    productsCount.textContent = (!products || products.length===0) ? 'No products yet' : products.length + ' items';
+    filteredProducts = [];
+    renderProducts(1);
+    renderProductsFull(1);
+    renderTopThree();
+    initSlider();
+  }
+
+  function renderProducts(page) {
+    currentPageHome = page;
+    productsGrid.innerHTML = '';
+    pagination.innerHTML = '';
+    const arr = products;
+    const start = (page - 1) * 3;
+    const paginated = arr.slice(start, start + 3);
+    if (arr.length === 0) {
+      const msg = document.createElement('div');
+      msg.className = 'muted'; msg.style.textAlign='center'; msg.style.padding='12px';
+      msg.textContent = 'No products available. Please log in as admin to add products.';
+      productsGrid.appendChild(msg);
+      return;
+    }
+    paginated.forEach(p => productsGrid.appendChild(createProductCard(p, false)));
+    const pagesCount = Math.ceil(arr.length / 3);
+    if (pagesCount > 1) {
+      const prev = document.createElement('button'); prev.textContent='Prev'; prev.className='page-btn';
+      if (page === 1) prev.disabled = true;
+      prev.addEventListener('click', ()=> page>1 && renderProducts(page-1));
+      pagination.appendChild(prev);
+    }
+    for (let i=1;i<=Math.ceil(arr.length/3);i++){
+      const btn = document.createElement('button');
+      btn.textContent=i; btn.className='page-btn'+(i===page?' active':''); btn.addEventListener('click',()=>renderProducts(i));
+      pagination.appendChild(btn);
+    }
+    if (Math.ceil(arr.length/3) > 1) {
+      const next = document.createElement('button'); next.textContent='Next'; next.className='page-btn';
+      if (page === Math.ceil(arr.length/3)) next.disabled = true;
+      next.addEventListener('click', ()=> page<Math.ceil(arr.length/3) && renderProducts(page+1));
+      pagination.appendChild(next);
+    }
+  }
+
+  function renderProductsFull(page) {
+    currentPageFull = page;
+    productsGridFull.innerHTML = '';
+    paginationFull.innerHTML = '';
+    const arr = (filteredProducts && filteredProducts.length) ? filteredProducts : products;
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const paginated = arr.slice(start, start + ITEMS_PER_PAGE);
+    if (arr.length === 0) {
+      const msg = document.createElement('div');
+      msg.className = 'muted'; msg.style.textAlign='center'; msg.style.padding='12px';
+      msg.textContent = 'No products available. Please log in as admin to add products.';
+      productsGridFull.appendChild(msg);
+      return;
+    }
+    paginated.forEach(p => productsGridFull.appendChild(createProductCard(p, true)));
+    const pagesCount = Math.ceil(arr.length / ITEMS_PER_PAGE);
+    if (pagesCount > 1) {
+      const prev = document.createElement('button'); prev.textContent='Prev'; prev.className='page-btn';
+      if (page === 1) prev.disabled = true;
+      prev.addEventListener('click', ()=> page>1 && renderProductsFull(page-1));
+      paginationFull.appendChild(prev);
+    }
+    for (let i=1;i<=pagesCount;i++){
+      const btn = document.createElement('button');
+      btn.textContent=i; btn.className='page-btn'+(i===page?' active':''); btn.addEventListener('click',()=>renderProductsFull(i));
+      paginationFull.appendChild(btn);
+    }
+    if (pagesCount > 1) {
+      const next = document.createElement('button'); next.textContent='Next'; next.className='page-btn';
+      if (page === pagesCount) next.disabled = true;
+      next.addEventListener('click', ()=> page<pagesCount && renderProductsFull(page+1));
+      paginationFull.appendChild(next);
+    }
+  }
+
+  function createProductCard(item, withView) {
+    const div = document.createElement('div');
+    div.className = 'product-card';
+    const img = document.createElement('img');
+    img.src = item.image; img.alt = item.name;
+    div.appendChild(img);
+    const meta = document.createElement('div');
+    meta.className = 'product-meta';
+    meta.innerHTML = `<h4>${item.name}</h4><p>${currencySymbol}${item.price}</p>`;
+    div.appendChild(meta);
+    const actions = document.createElement('div');
+    actions.className = 'card-actions';
+    const cartBtn = document.createElement('button');
+    cartBtn.className = 'pill'; cartBtn.textContent = 'Add to Cart';
+    cartBtn.addEventListener('click', () => addToCart(item));
+    actions.appendChild(cartBtn);
+
+    const likeBtn = document.createElement('button');
+    likeBtn.className = 'pill';
+    const likedByUser = likes.includes(item.id);
+    const likeCount = likeCounts[item.id] || 0;
+    const dislikeCount = dislikeCounts[item.id] || 0;
+    likeBtn.textContent = (likedByUser ? 'Dislike' : 'Like') + ' (' + likeCount + '/' + dislikeCount + ')';
+    likeBtn.addEventListener('click', () => { toggleLike(item.id); });
+    actions.appendChild(likeBtn);
+
+    if (withView) {
+      const viewBtn = document.createElement('button');
+      viewBtn.className = 'pill'; viewBtn.textContent = 'View';
+      viewBtn.addEventListener('click', () => viewProduct(item));
+      actions.appendChild(viewBtn);
+    }
+
+    if (adminLoggedIn) {
+      const editBtn = document.createElement('button');
+      editBtn.className = 'pill'; editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', () => editProduct(item.id));
+      actions.appendChild(editBtn);
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'pill'; delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', () => deleteProduct(item.id));
+      actions.appendChild(delBtn);
+    }
+    div.appendChild(actions);
+    return div;
+  }
+
+  // ---------- Cart ----------
+  let cart = [];
+  function loadCart(){ cart = JSON.parse(localStorage.getItem(LS_KEYS.CART) || '[]'); renderCart(); }
+  function saveCart(){ localStorage.setItem(LS_KEYS.CART, JSON.stringify(cart)); }
+  function addToCart(item){
+    const existing = cart.find(i => i.id === item.id);
+    if (existing) existing.qty += 1; else cart.push({...item, qty:1});
+    saveCart(); renderCart(); alert('Product added to cart');
+  }
+  function removeFromCart(id){ cart = cart.filter(i => i.id !== id); saveCart(); renderCart(); }
+  function renderCart(){
+    cartItems.innerHTML = '';
+    if (cart.length === 0) {
+      cartItems.innerHTML = '<p class="muted">Cart is empty</p>'; return;
+    }
+    cart.forEach(item => {
+      const wrap = document.createElement('div');
+      wrap.className = 'cart-item';
+      wrap.innerHTML = `
+        <div style="display:flex;gap:10px;align-items:center">
+          <img src="${item.image}" alt="${item.name}">
+          <div>
+            <strong>${item.name}</strong><br>
+            <span>${currencySymbol}${item.price} x ${item.qty}</span>
+          </div>
+        </div>
+        <button class="pill" style="background:var(--accent);color:#fff" onclick="removeFromCart(${item.id})">Remove</button>
+      `;
+      cartItems.appendChild(wrap);
+    });
+  }
+
+  // ---------- Product View ----------
+  function viewProduct(item){
+    productViewCard.innerHTML = '';
+    const img = document.createElement('img');
+    img.src=item.image; img.alt=item.name; img.style.width='100%'; img.style.height='220px'; img.style.objectFit='contain';
+    productViewCard.appendChild(img);
+    const h3 = document.createElement('h3'); h3.textContent=item.name; productViewCard.appendChild(h3);
+    const p = document.createElement('p'); p.textContent=item.desc; productViewCard.appendChild(p);
+    const price = document.createElement('strong'); price.textContent=currencySymbol + item.price; productViewCard.appendChild(price);
+    const addBtn = document.createElement('button'); addBtn.className='btn primary'; addBtn.textContent='Add to Cart'; addBtn.style.marginTop='12px';
+    addBtn.addEventListener('click', ()=> addToCart(item)); productViewCard.appendChild(addBtn);
+    pages.forEach(p => p.classList.remove('active')); document.getElementById('product-view').classList.add('active');
+  }
+
+  // ---------- Admin Product Actions (Edit/Delete) ----------
+  function editProduct(id){
+    if (!adminLoggedIn) { alert('Admin only'); return; }
+    const idx = products.findIndex(p => p.id === id);
+    if (idx === -1) return;
+    const item = products[idx];
+    const newName = prompt('New product name:', item.name);
+    if (newName !== null && newName.trim() !== '') item.name = newName.trim();
+    const newPrice = prompt('New price:', item.price);
+    if (newPrice !== null && newPrice.trim() !== '') item.price = newPrice.trim();
+    const newDesc = prompt('New description:', item.desc || '');
+    if (newDesc !== null && newDesc.trim() !== '') item.desc = newDesc.trim();
+    products[idx] = item;
+    localStorage.setItem(LS_KEYS.PRODUCTS, JSON.stringify(products));
+    cart.forEach(c => { if (c.id === id) { c.name = item.name; c.price = item.price; }});
+    saveCart();
+    loadProducts();
+    renderCart();
+    alert('Product updated');
+  }
+
+  function deleteProduct(id){
+    if (!adminLoggedIn) { alert('Admin only'); return; }
+    if (!confirm('Delete this product?')) return;
+    products = products.filter(p => p.id !== id);
+    localStorage.setItem(LS_KEYS.PRODUCTS, JSON.stringify(products));
+    cart = cart.filter(c => c.id !== id);
+    saveCart();
+    loadProducts();
+    renderCart();
+    alert('Product deleted');
+  }
+
+  // ---------- Likes ----------
+  let likes = []; let likeCounts = {}; let dislikeCounts = {};
+  function loadLikes(){ likes = JSON.parse(localStorage.getItem(LS_KEYS.LIKES) || '[]'); }
+  function saveLikes(){ localStorage.setItem(LS_KEYS.LIKES, JSON.stringify(likes)); }
+  function loadLikeCounts(){ likeCounts = JSON.parse(localStorage.getItem(LS_KEYS.LIKE_COUNTS) || '{}'); dislikeCounts = JSON.parse(localStorage.getItem(LS_KEYS.DISLIKE_COUNTS) || '{}'); }
+  function saveLikeCounts(){ localStorage.setItem(LS_KEYS.LIKE_COUNTS, JSON.stringify(likeCounts)); localStorage.setItem(LS_KEYS.DISLIKE_COUNTS, JSON.stringify(dislikeCounts)); }
+  function toggleLike(id){
+    const idx = likes.indexOf(id);
+    if (idx === -1) { likes.push(id); likeCounts[id] = (likeCounts[id] || 0) + 1; }
+    else { likes.splice(idx,1); dislikeCounts[id] = (dislikeCounts[id] || 0) + 1; }
+    saveLikes(); saveLikeCounts(); renderProducts(currentPageHome); renderProductsFull(currentPageFull);
+  }
+
+  // ---------- Feedback ----------
+  let selectedProduct = null;
+  let allFeedback = [];
+  function setupFeedbackSystem(){
+    loadFeedbacks();
+    feedbackSearch.addEventListener('input', handleFeedbackSearch);
+    submitFeedbackBtn.addEventListener('click', submitFeedback);
+    viewFeedbacksBtn.addEventListener('click', openAllFeedbacksModal);
+    document.getElementById('siteGoodBtn').addEventListener('click', ()=> updateSiteFeedback('good'));
+    document.getElementById('siteBadBtn').addEventListener('click', ()=> updateSiteFeedback('bad'));
+    // initial counters display
+    const initRaw = localStorage.getItem(LS_KEYS.SITE_FEEDBACK) || '{"good":0,"bad":0}';
+    try { const sf = JSON.parse(initRaw); goodCount.textContent = sf.good; badCount.textContent = sf.bad; } catch(_){}
+  }
+  function handleFeedbackSearch(){
+    const q = feedbackSearch.value.trim().toLowerCase();
+    feedbackSearchResults.innerHTML = '';
+    if (!q) return;
+    const matches = products.filter(p => p.name.toLowerCase().includes(q));
+    matches.forEach(item => {
+      const btn = document.createElement('button');
+      btn.className='pill'; btn.textContent=item.name;
+      btn.addEventListener('click', ()=> selectFeedbackProduct(item));
+      feedbackSearchResults.appendChild(btn);
+    });
+  }
+  function selectFeedbackProduct(item){
+    selectedProduct = item;
+    feedbackSelectedImg.src = item.image;
+    feedbackSelectedName.textContent = item.name;
+    feedbackSelectedPrice.textContent = currencySymbol + item.price;
+    selectedFeedbackProduct.style.display = 'block';
+    feedbackSearchResults.innerHTML = '';
+    feedbackSearch.value = '';
+  }
+  function loadFeedbacks(){
+    allFeedback = JSON.parse(localStorage.getItem(LS_KEYS.FEEDBACKS) || '[]');
+  }
+  function saveFeedbacks(){ localStorage.setItem(LS_KEYS.FEEDBACKS, JSON.stringify(allFeedback)); }
+  function submitFeedback(){
+    const text = feedbackText.value.trim();
+    if (!selectedProduct || !text) { alert('Please select a product and write feedback'); return; }
+    const fb = {productId:selectedProduct.id, name:selectedProduct.name, text, time:new Date().toLocaleString()};
+    allFeedback.push(fb); saveFeedbacks(); feedbackText.value=''; selectedFeedbackProduct.style.display='none'; selectedProduct=null; renderFeedbackList();
+  }
+  function renderFeedbackList(){
+    feedbackList.innerHTML='';
+    allFeedback.forEach(fb => {
+      const div = document.createElement('div'); div.className='fb-item';
+      div.innerHTML = `<strong>${fb.name}</strong><p>${fb.text}</p><small>${fb.time}</small>`;
+      feedbackList.appendChild(div);
+    });
+  }
+  function openAllFeedbacksModal(){
+    allFeedbacks.innerHTML='';
+    if (allFeedback.length===0) { allFeedbacks.innerHTML='<p class="muted">No feedback yet</p>'; }
+    else {
+      allFeedback.forEach(fb => {
+        const div = document.createElement('div'); div.className='fb-item';
+        div.innerHTML = `<strong>${fb.name}</strong><p>${fb.text}</p><small>${fb.time}</small>`;
+        allFeedbacks.appendChild(div);
+      });
+    }
+    if (viewFeedbacksModal) viewFeedbacksModal.classList.add('show');
+  }
+  function updateSiteFeedback(type){
+    const raw = localStorage.getItem(LS_KEYS.SITE_FEEDBACK) || '{"good":0,"bad":0}';
+    let siteFb;
+    try { siteFb = JSON.parse(raw); } catch(_) { siteFb = {good:0,bad:0}; }
+    if (type === 'good') siteFb.good += 1; else siteFb.bad += 1;
+    localStorage.setItem(LS_KEYS.SITE_FEEDBACK, JSON.stringify(siteFb));
+    goodCount.textContent = siteFb.good; badCount.textContent = siteFb.bad;
+  }
+
+  // ---------- Admin Panel ----------
+  function initAdminPanel(){
+    let lp;
+    function openLoginOnly(){
+      adminPanel.classList.add('active');
+      document.querySelectorAll('.admin-only').forEach(el => el.style.display = adminLoggedIn ? 'block' : 'none');
+      const mail = document.getElementById('adminEmail'); if (mail) mail.focus();
+      adminPanel.scrollTop = 0;
+      if (!adminLoggedIn) showAdminAlert('Admin access only. Please log in.');
+    }
+    adminOpenBtn.addEventListener('click', (e)=>{ e.preventDefault(); openLoginOnly(); });
+    adminOpenBtn.addEventListener('touchstart', ()=>{ lp=setTimeout(openLoginOnly,700); }, {passive:true});
+    ['touchend','touchcancel','mouseup','mouseleave'].forEach(ev=>adminOpenBtn.addEventListener(ev,()=>clearTimeout(lp)));
+
+    closeAdmin.addEventListener('click', ()=> adminPanel.classList.remove('active'));
+    adminLoginBtn.addEventListener('click', loginAdmin);
+    adminLogoutBtn.addEventListener('click', logoutAdmin);
+    logoSetBtn.addEventListener('click', uploadLogo);
+    addProductBtn.addEventListener('click', uploadProduct);
+    clearProductsBtn.addEventListener('click', clearAllProducts);
+    saveSentencesBtn.addEventListener('click', saveSentences);
+    setCurrencyBtn.addEventListener('click', saveCurrency);
+    saveContactsBtn.addEventListener('click', saveContacts);
+    openContactsBtn.addEventListener('click', openContacts);
+    openShare.addEventListener('click', ()=> shareModal.classList.add('show'));
+    if (savePublicLinkBtn) savePublicLinkBtn.addEventListener('click', savePublicLink);
+    if (saveOwnerBtn) saveOwnerBtn.addEventListener('click', saveOwnerSettings);
+
+    document.querySelectorAll('[data-close]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const modal = e.target.closest('.modal');
+        if (modal) { modal.classList.remove('show'); if (modal.id==='userModal') sessionStorage.setItem('daudHideSignupPrompt','true'); }
+      });
+    });
+    document.getElementById('contactWhatsapp').addEventListener('click', ()=> { if (whatsappLink) window.open(whatsappLink,'_blank'); });
+    document.getElementById('contactMessenger').addEventListener('click', ()=> { if (messengerLink) window.open(messengerLink,'_blank'); });
+    document.getElementById('shareWhatsapp').addEventListener('click', ()=> {
+      const url = publicLink || window.location.href; const shareUrl = 'https://wa.me/?text=' + encodeURIComponent(url); window.open(shareUrl, '_blank');
+    });
+    document.getElementById('shareMessenger').addEventListener('click', ()=> {
+      const url = publicLink || window.location.href; const shareUrl = 'https://m.me/?link=' + encodeURIComponent(url); window.open(shareUrl, '_blank');
+    });
+    document.getElementById('copyLinkBtn').addEventListener('click', ()=> {
+      const url = publicLink || window.location.href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(()=>alert('Link copied to clipboard!')).catch(()=>alert('Could not copy. Please copy URL manually.'));
+      } else {
+        alert('Copy not supported on this browser. Long press the URL bar to copy.');
+      }
+    });
+    guestBtn.addEventListener('click', ()=> userModal.classList.toggle('show'));
+  }
+
+  async function loginAdmin(){
+    const email = adminEmail.value.trim();
+    const pass  = adminPass.value.trim();
+    if (!email || !pass) { alert('Enter credentials'); return; }
+
+    const s = getSiteSettings();
+    const e = email.toLowerCase();
+
+    if (!s.ownerEmail) { s.ownerEmail = 'mdipml000@gmail.com'; saveSiteSettings(s); }
+
+    if (s.ownerEmail && !s.ownerPassHash && e === s.ownerEmail.toLowerCase()) {
+      s.ownerPassHash = await sha256(pass);
+      saveSiteSettings(s);
+    }
+
+    const ok = (e === (s.ownerEmail||'').toLowerCase()) &&
+               ((await sha256(pass)) === (s.ownerPassHash||''));
+
+    if (!ok) { alert('Invalid credentials'); return; }
+
+    adminLoggedIn = true;
+    localStorage.setItem(LS_KEYS.ADMIN_LOGGED_IN, 'true');
+    localStorage.setItem(LS_KEYS.ADMIN_EMAIL_FLAG, e);
+
+    adminPanel.classList.add('active');
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+    try { renderProducts(currentPageHome||1); renderProductsFull(currentPageFull||1); } catch(_){}
+    adminEmail.value = ''; adminPass.value = '';
+    alert('Logged in as Owner');
+  }
+  function logoutAdmin(){
+    adminLoggedIn = false;
+    localStorage.removeItem(LS_KEYS.ADMIN_LOGGED_IN);
+    localStorage.removeItem(LS_KEYS.ADMIN_EMAIL_FLAG);
+    adminPanel.classList.remove('active');
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display='none');
+    try { renderProducts(currentPageHome||1); renderProductsFull(currentPageFull||1); } catch(_){}
+  }
+
+  function uploadLogo(){
+    const file = logoInput.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const saved = getSiteSettings();
+      saved.logo = e.target.result; saveSiteSettings(saved);
+      siteLogo.src = heroLogo.src = saved.logo;
+    };
+    reader.readAsDataURL(file);
+  }
+  function uploadProduct(){
+    const file = productImageInput.files[0];
+    if (!file || !productName.value || !productPrice.value) return alert('Complete all fields');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const id = Date.now();
+      const newItem = { id, name: productName.value.trim(), price: productPrice.value.trim(), desc: productDesc.value.trim(), image: e.target.result };
+      products.push(newItem);
+      localStorage.setItem(LS_KEYS.PRODUCTS, JSON.stringify(products));
+      loadProducts();
+      productName.value = productPrice.value = productDesc.value = ''; productImageInput.value = '';
+    };
+    reader.readAsDataURL(file);
+  }
+  function clearAllProducts(){
+    if (confirm('Are you sure?')) {
+      products = []; localStorage.removeItem(LS_KEYS.PRODUCTS); loadProducts();
+    }
+  }
+  function saveSentences(){
+    const text = sentencesInput.value.trim(); if (!text) return;
+    const saved = getSiteSettings(); saved.sentences = text; saveSiteSettings(saved);
+    rotatingSentences = text.split(',').map(s=>s.trim()).filter(Boolean); alert('Saved sentences');
+  }
+  function saveCurrency(){
+    const sym = currencyInput.value.trim() || '৳'; currencySymbol = sym;
+    const saved = getSiteSettings(); saved.currency = sym; saveSiteSettings(saved);
+    loadProducts(); alert('Currency symbol saved');
+  }
+  function saveContacts(){
+    const code = whatsappCountry.value; const number = whatsappNumber.value.trim(); const messenger = messengerInput.value.trim();
+    whatsappLink = number ? `https://wa.me/${code.replace('+','')}${number}` : '';
+    messengerLink = messenger;
+    const saved = getSiteSettings(); saved.whatsapp = whatsappLink; saved.messenger = messengerLink; saveSiteSettings(saved);
+    alert('Contacts saved');
+  }
+  function openContacts(){
+    if (!whatsappLink && !messengerLink) return alert('No contacts saved');
+    if (whatsappLink) window.open(whatsappLink,'_blank'); if (messengerLink) window.open(messengerLink,'_blank');
+  }
+  function savePublicLink(){
+    if (!publicLinkInput) return;
+    const link = publicLinkInput.value.trim(); if (!link) return alert('Enter a valid public link');
+    publicLink = link; const saved = getSiteSettings(); saved.publicLink = link; saveSiteSettings(saved); alert('Public link saved');
+  }
+  async function saveOwnerSettings(){
+    if (!adminLoggedIn) return alert('Only current owner can change this');
+    const s = getSiteSettings();
+    const newEmail = (ownerEmailInput.value||'').trim();
+    const newPass  = (ownerPassInput.value||'').trim();
+    if (newEmail) s.ownerEmail = newEmail;
+    if (newPass) s.ownerPassHash = await sha256(newPass);
+    saveSiteSettings(s); alert('Owner settings saved');
+  }
+
+  function showAdminAlert(msg){
+    const alertDiv = document.getElementById('adminAlert'); if (!alertDiv) return;
+    alertDiv.textContent = msg; alertDiv.classList.remove('hidden');
+    if (showAdminAlert._timer) clearTimeout(showAdminAlert._timer);
+    showAdminAlert._timer = setTimeout(()=>alertDiv.classList.add('hidden'), 3000);
+  }
+
+  // ---------- User System ----------
+  let users = []; let currentUser = null;
+  function loadUsers(){ users = JSON.parse(localStorage.getItem(LS_KEYS.USERS) || '[]'); }
+  function saveUsers(){ localStorage.setItem(LS_KEYS.USERS, JSON.stringify(users)); }
+  function initUserSystem(){
+    loadUsers(); const stored = localStorage.getItem(LS_KEYS.CURRENT_USER); if (stored) currentUser = stored;
+    updateUserAuthButton();
+    if (!currentUser && !sessionStorage.getItem('daudGuestPromptShown')) {
+      sessionStorage.setItem('daudGuestPromptShown','true');
+      if (!sessionStorage.getItem('daudHideSignupPrompt')) { setTimeout(()=> userModal.classList.add('show'), 800); }
+    }
+    document.getElementById('userSignupBtn').addEventListener('click', signupUser);
+    document.getElementById('userLoginBtn').addEventListener('click', loginUser);
+    userAuthBtn.addEventListener('click', ()=> { if (currentUser) logoutUser(); else userModal.classList.add('show'); });
+  }
+  function updateUserAuthButton(){ userAuthBtn.textContent = currentUser ? ('Logout ('+currentUser+')') : 'Sign Up / Login'; }
+  function signupUser(){
+    const emailEl = document.getElementById('userEmail'); const passEl = document.getElementById('userPass');
+    const email = emailEl.value.trim(); const pass = passEl.value.trim();
+    if (!email || !pass) return alert('Fill out all fields');
+    if (users.find(u=>u.email===email)) return alert('User already exists');
+    users.push({email, pass}); saveUsers(); currentUser=email; localStorage.setItem(LS_KEYS.CURRENT_USER, currentUser);
+    alert('Account created and logged in'); emailEl.value=''; passEl.value=''; userModal.classList.remove('show'); updateUserAuthButton();
+  }
+  function loginUser(){
+    const emailEl = document.getElementById('userEmail'); const passEl = document.getElementById('userPass');
+    const email = emailEl.value.trim(); const pass = passEl.value.trim();
+    if (!email || !pass) return alert('Fill out all fields');
+    const found = users.find(u=>u.email===email && u.pass===pass);
+    if (!found) return alert('Invalid credentials');
+    currentUser=email; localStorage.setItem(LS_KEYS.CURRENT_USER, currentUser); alert('Logged in'); emailEl.value=''; passEl.value=''; userModal.classList.remove('show'); updateUserAuthButton();
+  }
+  function logoutUser(){ localStorage.removeItem(LS_KEYS.CURRENT_USER); currentUser=null; alert('Logged out'); updateUserAuthButton(); }
+
+  function checkAdminPersistentLogin(){
+    const flag = localStorage.getItem(LS_KEYS.ADMIN_LOGGED_IN);
+    const who = localStorage.getItem(LS_KEYS.ADMIN_EMAIL_FLAG);
+    const s = getSiteSettings();
+    if (flag === 'true' && who && who.toLowerCase() === (s.ownerEmail||'').toLowerCase()) {
+      adminLoggedIn = true; document.querySelectorAll('.admin-only').forEach(el => el.style.display='block');
+      try { renderProducts(currentPageHome||1); renderProductsFull(currentPageFull||1); } catch(_){}
+    } else {
+      adminLoggedIn = false; localStorage.removeItem(LS_KEYS.ADMIN_LOGGED_IN); localStorage.removeItem(LS_KEYS.ADMIN_EMAIL_FLAG);
+      document.querySelectorAll('.admin-only').forEach(el => el.style.display='none');
+    }
+  }
+
+  // ---------- Hero rotate & Slider ----------
+  function autoRotateText(){ let idx=0; setInterval(()=>{ rotatingText.textContent = rotatingSentences[idx]; idx=(idx+1)%rotatingSentences.length; }, 2800); }
+
+  let sliderTimer = null;
+  function renderTopThree(){
+    topThree.innerHTML=''; if (!products || products.length===0) return;
+    products.slice(0,3).forEach(item=>{
+      const card = document.createElement('div'); card.className='small-card';
+      const img = document.createElement('img'); img.src=item.image; img.alt=item.name; card.appendChild(img);
+      card.addEventListener('click', ()=> viewProduct(item)); topThree.appendChild(card);
+    });
+  }
+  function initSlider(){
+    slides.innerHTML=''; slideDots.innerHTML=''; if (sliderTimer) { clearInterval(sliderTimer); sliderTimer=null; }
+    const list = products||[]; if (list.length===0) return; const maxSlides = Math.min(list.length, 6); let currentSlideIndex=0;
+    for (let i=0;i<maxSlides;i++){
+      const item=list[i]; const sdiv=document.createElement('div'); sdiv.className='slide';
+      const img=document.createElement('img'); img.src=item.image; img.alt=item.name; sdiv.appendChild(img);
+      sdiv.addEventListener('click', ()=> viewProduct(item)); slides.appendChild(sdiv);
+      const dot=document.createElement('div'); dot.className='dot'+(i===0?' active':''); dot.addEventListener('click', ()=>{ currentSlideIndex=i; updateSlider(); resetTimer(); }); slideDots.appendChild(dot);
+    }
+    function updateSlider(){ slides.style.transform=`translateX(-${currentSlideIndex*100}% )`; const allDots=slideDots.children; for (let j=0;j<allDots.length;j++){ allDots[j].classList.toggle('active', j===currentSlideIndex);} }
+    function resetTimer(){ if (sliderTimer) clearInterval(sliderTimer); sliderTimer=setInterval(()=>{ currentSlideIndex=(currentSlideIndex+1)%maxSlides; updateSlider(); }, 3000); }
+    updateSlider(); resetTimer();
+  }
+
+  // ---------- Search ----------
+  function handleProductSearch(){
+    const q = productSearchInput.value.trim().toLowerCase();
+    filteredProducts = q ? products.filter(p => p.name.toLowerCase().includes(q)) : [];
+    renderProductsFull(1);
+  }
+  </script>
+</body>
+</html>
