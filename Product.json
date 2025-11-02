@@ -1,0 +1,41 @@
+{
+  "site": {
+    "name": "দাউদ স্টোর",
+    "logoDataUrl": "data:image/png;base64,PUT_BASE64_LOGO_HERE",
+    "currency": "৳",
+    "sentences": [
+      "স্বাগতম — দাউদ স্টোর",
+      "সেরা দামে সেরা পণ্য",
+      "দ্রুত ডেলিভারি"
+    ],
+    "whatsapp": "https://wa.me/8801XXXXXXXXX",
+    "messenger": "https://m.me/your-page-or-username",
+    "publicLink": "https://your-username.github.io/daud-store"
+  },
+
+  "products": [
+    {
+      "id": 1,
+      "name": "Product One",
+      "price": "1200",
+      "desc": "সংক্ষিপ্ত বর্ণনা এখানে দিন",
+      "image": "data:image/png;base64,PUT_BASE64_IMAGE_1_HERE"
+    },
+    {
+      "id": 2,
+      "name": "Product Two",
+      "price": "850",
+      "desc": "সংক্ষিপ্ত বর্ণনা এখানে দিন",
+      "image": "data:image/jpeg;base64,PUT_BASE64_IMAGE_2_HERE"
+    },
+    {
+      "id": 3,
+      "name": "Product Three",
+      "price": "1999",
+      "desc": "সংক্ষিপ্ত বর্ণনা এখানে দিন",
+      "image": "data:image/webp;base64,PUT_BASE64_IMAGE_3_HERE"
+    }
+  ],
+
+  "version": 1
+}
