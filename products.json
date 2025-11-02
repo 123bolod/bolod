@@ -1,0 +1,26 @@
+{
+  "site": {
+    "logo": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNg+A8AAoMBg6dQfH8AAAAASUVORK5CYII=",
+    "publicLink": "https://yourname.github.io/daud-store",
+    "currency": "৳",
+    "sentences": "স্বাগতম — দাউদ স্টোর, Best deals!, Fast delivery",
+    "whatsapp": "https://wa.me/8801XXXXXXXXX",
+    "messenger": "https://m.me/yourpage"
+  },
+  "products": [
+    {
+      "id": 1,
+      "name": "Orange Mug",
+      "price": "350",
+      "desc": "Matte ceramic mug (Komola theme)",
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNg+A8AAoMBg6dQfH8AAAAASUVORK5CYII="
+    },
+    {
+      "id": 2,
+      "name": "White Tee",
+      "price": "599",
+      "desc": "Soft cotton tee (Sada theme)",
+      "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNg+A8AAoMBg6dQfH8AAAAASUVORK5CYII="
+    }
+  ]
+}
