@@ -1,1 +1,0 @@
-Open index.html. Admin owner default: mdipml000@gmail.com (change inside admin panel). First login sets password.
